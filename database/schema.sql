@@ -1,0 +1,23 @@
+CREATE TABLE products(
+sr_no INT AUTO_INCREMENT,
+prod_id INT PRIMARY KEY,
+prod_name VARCHAR(255) NOT NULL,
+price VARCHAR(255) NOT NULL,
+seller VARCHAR(255) NOT NULL,
+items_sold INT NOT NULL,
+UNIQUE(sr_no));
+
+CREATE TABLE product_review(
+review_id INT AUTO_INCREMENT PRIMARY KEY,
+product_id INT NOT NULL,
+user_id INT NOT NULL,
+username VARCHAR(255) NOT NULL,
+rating INT NOT NULL CHECK(rating BETWEEN 1 AND 5),
+review_text VARCHAR(1000),
+review_date DATE DEFAULT (CURRENT_DATE),
+status ENUM('Visible','Hidden','Reported')
+DEFAULT 'Visible',
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+ON UPDATE CURRENT_TIMESTAMP
+);
