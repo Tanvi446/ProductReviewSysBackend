@@ -6,12 +6,7 @@ const getReviewsByProductId = async (req, res) => {
         const { productId } = req.params;
 
         const [reviews] = await db.query(
-        `SELECT *
-        FROM product_review
-        WHERE product_id = ?
-        AND status = 'Visible'
-      `,
-      [productId]
+        `SELECT * FROM product_review WHERE product_id = ? AND status = 'Visible'`, [productId]
       );
 
         res.status(200).json(reviews);
@@ -30,31 +25,13 @@ const addReview = async (req, res) => {
   try {
 
     const {
-      product_id,
-      user_id,
-      username,
-      rating,
-      review_text
+      product_id, user_id, username, rating, review_text
     } = req.body;
 
     await db.query(
-      `INSERT INTO product_review
-      (
-        product_id,
-        user_id,
-        username,
-        rating,
-        review_text
-      )
+      `INSERT INTO product_review(product_id,user_id,username,rating,review_text)
       VALUES (?, ?, ?, ?, ?)`,
-      [
-        product_id,
-        user_id,
-        username,
-        rating,
-        review_text
-      ]
-    );
+      [ product_id, user_id, username, rating, review_text ]);
 
     res.status(201).json({
       message: "Review Added Successfully"
@@ -77,32 +54,19 @@ const updateReview = async (req, res) => {
     const { reviewId } = req.params;
 
     const {
-      product_id,
-      user_id,
-      username,
-      rating,
-      review_text
+      product_id, user_id, username, rating, review_text
     } = req.body;
 
     await db.query(
       `
-      UPDATE product_review
-      SET
+      UPDATE product_review SET
         product_id = ?,
         user_id = ?,
         username = ?,
         rating = ?,
         review_text = ?
-      WHERE review_id = ?
-      `,
-      [
-        product_id,
-        user_id,
-        username,
-        rating,
-        review_text,
-        reviewId
-      ]
+      WHERE review_id = ? `,
+      [product_id, user_id, username, rating, review_text, reviewId]
     );
 
     res.status(200).json({
@@ -126,10 +90,7 @@ const deleteReview = async (req, res) => {
     const { reviewId } = req.params;
 
     await db.query(
-      `
-      DELETE FROM product_review
-      WHERE review_id = ?
-      `,
+      ` DELETE FROM product_review WHERE review_id = ? `,
       [reviewId]
     );
 
@@ -154,12 +115,7 @@ const reportReview = async (req, res) => {
     const { reviewId } = req.params;
 
     await db.query(
-      `
-      UPDATE product_review
-      SET status = 'Reported'
-      WHERE review_id = ?
-      `,
-      [reviewId]
+      `UPDATE product_review SET status = 'Reported' WHERE review_id = ?`,[reviewId]
     );
 
     res.status(200).json({
@@ -188,12 +144,7 @@ const getAllReviewsForAdmin = async (
 
     const [reviews] =
       await db.query(
-        `
-        SELECT *
-        FROM product_review
-        WHERE product_id = ?
-        `,
-        [productId]
+        `SELECT * FROM product_review WHERE product_id = ?`,[productId]
       );
 
     res.status(200).json(
@@ -221,12 +172,7 @@ const hideReview = async (
       req.params;
 
     await db.query(
-      `
-      UPDATE product_review
-      SET status = 'Hidden'
-      WHERE review_id = ?
-      `,
-      [reviewId]
+      `UPDATE product_review SET status = 'Hidden' WHERE review_id = ? `,[reviewId]
     );
 
     res.status(200).json({
